@@ -15,6 +15,11 @@ class App {
                 $this->controllerClassName = 'Home';
                 $this->controllerFileName = 'home.controller.php';
                 break;
+
+            case 'categories':
+                $this->controllerClassName = 'Categories';
+                $this->controllerFileName = 'categories.controller.php';
+                break;
                 
             default:
                 $this->controllerClassName = 'PageNotFound';
