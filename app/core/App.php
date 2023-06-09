@@ -4,11 +4,13 @@ class App {
 
     private $controllerClassName;
     private $controllerFileName;
+    private $requestPath;
 
 	public function __construct() {
 
 		$requestPath = $_GET['path'] ?? '';
-        
+        $this->requestPath = $requestPath;
+
         switch ($requestPath) {
             case '':
             case '/':
@@ -35,5 +37,19 @@ class App {
         $controller = new $this->controllerClassName;
         $controller->render();
         return;
+    }
+
+    public function get($property) {
+
+        switch ($property) {
+            case 'controllerClassName':
+                return $this->controllerClassName;
+            case 'controllerFileName':
+                return $this->controllerFileName;
+            case 'requestPath':
+                return $this->requestPath;
+            default:
+                return null;
+        }
     }
 }

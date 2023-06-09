@@ -1,41 +1,41 @@
-$(document).ready(function() {
+// $(document).ready(function() {
 
-  $('#get-data').on('click', function() {
+//   $('#get-data').on('click', function() {
 
-    $('.loader-container').show();
+//     $('.loader-container').show();
 
-    $.ajax({
-      url: 'https://dsb99.app/rumble/api/v1/channel/tateconfidential/videos',
-      method: 'GET',
-      success: function(response) {
+//     $.ajax({
+//       url: 'https://dsb99.app/rumble/api/v1/channel/tateconfidential/videos',
+//       method: 'GET',
+//       success: function(response) {
 
-        $('.loader-container').hide();
+//         $('.loader-container').hide();
 
-        const main = $('main');
-        const section = $('<section>');
-        const ul = $('<ul>'); 
+//         const main = $('main');
+//         const section = $('<section>');
+//         const ul = $('<ul>'); 
         
-        const videos = response.data.videos;
-        console.log(videos);
+//         const videos = response.data.videos;
+//         console.log(videos);
 
-        videos.forEach(video => {
+//         videos.forEach(video => {
 
-          const html = video.html;
+//           const html = video.html;
 
-          ul.append(html);
+//           ul.append(html);
 
-        });
+//         });
 
-        section.append(ul);
-        main.append(section);
+//         section.append(ul);
+//         main.append(section);
 
-      },
-      error: function(xhr, status, error) {
-        // Handle the error
-        $('.loader-container').hide();
-        console.log('Error:', error);
-      }
-    });
+//       },
+//       error: function(xhr, status, error) {
+//         // Handle the error
+//         $('.loader-container').hide();
+//         console.log('Error:', error);
+//       }
+//     });
 
-  });
-});
+//   });
+// });
