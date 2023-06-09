@@ -12,8 +12,8 @@
 		<h1>Home</h1>
 		<nav>
 			<ul>
-				<li><a href="#">Home</a></li>
-				<li><a href="categories">Categories</a></li>
+				<li><a href="<?= BASE_URL ?>">Home</a></li>
+				<li><a href="<?= BASE_URL ?>/categories">Categories</a></li>
 				<li><a href="#">The Real World</a></li>
 			</ul>
 		</nav>
