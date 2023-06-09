@@ -13,7 +13,7 @@
 		<nav>
 			<ul>
 				<li><a href="<?= BASE_URL ?>">Home</a></li>
-				<li><a href="#">Categories</a></li>
+				<li><a href="<?= BASE_URL ?>/categories">Categories</a></li>
 				<li><a href="#">The Real World</a></li>
 			</ul>
 		</nav>
@@ -22,8 +22,8 @@
 		<section>
 			<h2>List of categories</h2>
 			<ul>
-				<li><a href="categories/tate-confidential">Tate Confidential</a></li>
-				<li><a href="categories/tate-speech">Tate Speech</a></li>
+				<li><a href="<?= BASE_URL ?>/category/tate-confidential">Tate Confidential</a></li>
+				<li><a href="<?= BASE_URL ?>/category/tate-speech">Tate Speech</a></li>
 				<li><a href="#">Tate Interviews</a></li>
 				<li><a href="#">Tate Motivation</a></li>
 				<li><a href="#">Tate Shorts</a></li>

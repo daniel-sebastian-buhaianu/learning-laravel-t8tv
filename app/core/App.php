@@ -8,19 +8,23 @@ class App {
 
 	public function __construct() {
 
-		$requestPath = $_GET['path'] ?? '';
-        $this->requestPath = $requestPath;
-
+        $url = getCurrentPageUrl();
+        $requestPath = getUrlPath($url);
         switch ($requestPath) {
-            case '':
-            case '/':
+            case ROOT_PATH:
+            case ROOT_PATH.'/':
                 $this->controllerClassName = 'Home';
                 $this->controllerFileName = 'home.controller.php';
                 break;
 
-            case 'categories':
+            case ROOT_PATH.'/categories':
                 $this->controllerClassName = 'Categories';
                 $this->controllerFileName = 'categories.controller.php';
+                break;
+
+            case 0 === strpos( $requestPath, ROOT_PATH.'/category' ):
+                $this->controllerClassName = 'Category';
+                $this->controllerFileName = 'category.controller.php';
                 break;
                 
             default:
@@ -29,6 +33,7 @@ class App {
                 break;
         }
 
+        $this->requestPath = $requestPath;
         return;
 	}
 
