@@ -13,7 +13,11 @@ class Category {
 
 	public function render() {
 
-		$categoryName = $this->prettifyName();
+		$vars = array();
+
+		$vars['name'] = $this->prettifyName();
+		$vars['data'] = $this->getData();
+
 		include __DIR__.'/../views/category.views.php';
 		return;
 	}
@@ -35,6 +39,36 @@ class Category {
 		}
 
 		return $result;
+	}
+
+	private function getData() {
+
+		$name = $this->name;
+		switch ($name) {
+			case 'tate-confidential':
+				$data = $this->getDataFromUrl('https://dsb99.app/rumble/api/v1/channel/tateconfidential/videos');
+				break;
+			case 'tate-speech':
+				$data = $this->getDataFromUrl('https://dsb99.app/rumble/api/v1/channel/TateSpeech/videos');
+				break;
+			default:
+				$data = null;
+		}
+
+		return $data;
+	}
+
+	private function getDataFromUrl($url) {
+
+		$data = null;
+
+		$response = file_get_contents($url);
+		if (false !== $response) {
+
+		    $data = json_decode($response);
+		}
+
+		return $data;
 	}
 	
 }
