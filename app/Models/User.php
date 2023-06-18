@@ -18,7 +18,8 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
         'email',
         'password',
     ];
@@ -42,4 +43,19 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    /**
+     * The database table used by the model for authentication.
+     *
+     * @var string
+     */
+    protected $table = 'user';
+
+    /**
+     * The primary key name in the user table.
+     *
+     * @var string
+     */
+    protected $primaryKey = 'user_id';
+
 }
