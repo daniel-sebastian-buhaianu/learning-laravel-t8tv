@@ -45,7 +45,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * The database table used by the model for authentication.
+     * The database table used by the model.
      *
      * @var string
      */

@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('avatar', 255)->nullable();
             $table->unsignedBigInteger('followers_count')->nullable();
             $table->integer('videos_count')->nullable();
+            $table->timestamps();
         });
     }
 

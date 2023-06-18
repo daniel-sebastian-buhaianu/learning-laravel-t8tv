@@ -25,6 +25,7 @@ return new class extends Migration
             $table->unsignedBigInteger('dislikes_count')->nullable();
             $table->unsignedBigInteger('views_count')->nullable();
             $table->unsignedBigInteger('comments_count')->nullable();
+            $table->timestamps();
 
             $table->foreign('rumble_channel_id')
                 ->references('rumble_channel_id')
