@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\VideoCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class VideoCategoryController extends Controller
 {
@@ -12,7 +13,9 @@ class VideoCategoryController extends Controller
      */
     public function index()
     {
-        //
+        $categories = DB::table('video_category')->get();
+
+        return view('video-category.index', compact('categories'));
     }
 
     /**
