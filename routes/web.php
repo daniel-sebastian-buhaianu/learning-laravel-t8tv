@@ -33,3 +33,6 @@ Route::get('/video-category', [App\Http\Controllers\VideoCategoryController::cla
 
 Route::get('/video-category/{videoCategoryNameInSlugFormat}', [App\Http\Controllers\VideoCategoryController::class, 'show'])
     ->name('video-category.show');
+
+Route::post('/rumble-channel', [App\Http\Controllers\RumbleChannelController::class, 'store'])
+    ->name('rumble-channel.store');

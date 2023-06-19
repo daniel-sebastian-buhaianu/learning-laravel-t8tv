@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\VideoCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class VideoCategoryController extends Controller
 {
@@ -31,9 +32,22 @@ class VideoCategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'name' => 'required|unique:video_category|max:255|min:4|string',
+        $validator = Validator::make($request->all(), [
+            'name' => [
+                'required',
+                'unique:video_category',
+                'max:255',
+                'min:4',
+                'string',
+            ]
         ]);
+
+        if ($validator->fails()) 
+        {
+            return redirect()
+                ->back()
+                ->withErrors($validator, 'createVideoCategory');
+        }
 
         $videoCategoryName = $request->all()['name']; 
 
@@ -41,7 +55,7 @@ class VideoCategoryController extends Controller
             'name' => $videoCategoryName,
         ]);
 
-        return redirect()->back()->with('message', "Video category '$videoCategoryName' has been successfully created!");
+        return redirect()->back()->with('createVideoCategoryStatus', "Video category '$videoCategoryName' has been successfully created!");
     }
 
     /**

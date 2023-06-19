@@ -52,7 +52,7 @@ class User extends Authenticatable
     protected $table = 'user';
 
     /**
-     * The primary key name in the user table.
+     * The primary key name in the model's table.
      *
      * @var string
      */

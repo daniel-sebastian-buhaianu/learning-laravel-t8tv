@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class VideoCategory extends Model
+class RumbleChannel extends Model
 {
     use HasFactory;
 
@@ -15,7 +15,15 @@ class VideoCategory extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'id',
+        'url',
+        'title',
+        'joining_date',
+        'description',
+        'banner',
+        'avatar',
+        'followers_count',
+        'videos_count'
     ];
 
     /**
@@ -23,12 +31,12 @@ class VideoCategory extends Model
      *
      * @var string
      */
-    protected $table = 'video_category';
+    protected $table = 'rumble_channel';
 
     /**
      * The primary key name in the model's table.
      *
      * @var string
      */
-    protected $primaryKey = 'video_category_id';
+    protected $primaryKey = 'rumble_channel_id';
 }
