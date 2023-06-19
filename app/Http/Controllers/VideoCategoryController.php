@@ -47,9 +47,11 @@ class VideoCategoryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(VideoCategory $videoCategory)
+    public function show($videoCategoryNameInSlugFormat)
     {
-        //
+        $videoCategoryName = convertFromSlugFormatToOriginal($videoCategoryNameInSlugFormat);
+
+        return view('video-category.show', compact('videoCategoryName'));
     }
 
     /**

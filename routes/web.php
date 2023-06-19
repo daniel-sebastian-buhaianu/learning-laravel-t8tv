@@ -19,10 +19,17 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])
+    ->name('home');
 
-Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
+Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])
+    ->name('dashboard');
 
-Route::post('/video-category', [App\Http\Controllers\VideoCategoryController::class, 'store'])->name('video-category.store');
-Route::get('/video-category', [App\Http\Controllers\VideoCategoryController::class, 'index'])->name('video-category.index');
+Route::post('/video-category', [App\Http\Controllers\VideoCategoryController::class, 'store'])
+    ->name('video-category.store');
 
+Route::get('/video-category', [App\Http\Controllers\VideoCategoryController::class, 'index'])
+    ->name('video-category.index');
+
+Route::get('/video-category/{videoCategoryNameInSlugFormat}', [App\Http\Controllers\VideoCategoryController::class, 'show'])
+    ->name('video-category.show');
