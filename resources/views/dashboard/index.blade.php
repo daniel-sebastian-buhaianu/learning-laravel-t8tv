@@ -26,7 +26,7 @@
 
     <form class="mt-5" action="/rumble-channel" method="post">
         @csrf
-        <h4>Add Rumble Channel Data To Database</h4>
+        <h4>Add Rumble Channel About Data To Database</h4>
         @if (count($errors->addRumbleChannel) > 0)
             <div class="alert alert-danger">
                 <ul>
