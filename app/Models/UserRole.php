@@ -26,7 +26,7 @@ class UserRole extends Model
     protected $table = 'user_role';
 
     /**
-     * The primary key name in the user table.
+     * The primary key name in the model's table.
      *
      * @var string
      */
