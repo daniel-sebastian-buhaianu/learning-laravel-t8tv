@@ -50,12 +50,4 @@ class User extends Authenticatable
      * @var string
      */
     protected $table = 'user';
-
-    /**
-     * The primary key name in the model's table.
-     *
-     * @var string
-     */
-    protected $primaryKey = 'user_id';
-
 }

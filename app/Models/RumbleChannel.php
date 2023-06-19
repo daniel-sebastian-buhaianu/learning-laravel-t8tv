@@ -15,7 +15,7 @@ class RumbleChannel extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'id',
+        'rumble_id',
         'url',
         'title',
         'joining_date',
@@ -32,11 +32,4 @@ class RumbleChannel extends Model
      * @var string
      */
     protected $table = 'rumble_channel';
-
-    /**
-     * The primary key name in the model's table.
-     *
-     * @var string
-     */
-    protected $primaryKey = 'rumble_channel_id';
 }

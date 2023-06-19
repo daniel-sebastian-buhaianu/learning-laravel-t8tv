@@ -65,7 +65,7 @@ class RumbleChannelController extends Controller
         $data = $response->data;
 
         RumbleChannel::create([
-            'id' => $rumbleChannelId,
+            'rumble_id' => $rumbleChannelId,
             'url' => $rumbleChannelUrl,
             'title' => $data->title,
             'joining_date' => convertRumbleJoiningDateToMysqlDateFormat($data->joining_date),

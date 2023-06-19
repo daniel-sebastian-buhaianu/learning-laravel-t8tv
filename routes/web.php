@@ -36,3 +36,6 @@ Route::get('/video-category/{videoCategoryNameInSlugFormat}', [App\Http\Controll
 
 Route::post('/rumble-channel', [App\Http\Controllers\RumbleChannelController::class, 'store'])
     ->name('rumble-channel.store');
+
+Route::post('/rumble-video', [App\Http\Controllers\RumbleVideoController::class, 'store'])
+    ->name('rumble-video.store');

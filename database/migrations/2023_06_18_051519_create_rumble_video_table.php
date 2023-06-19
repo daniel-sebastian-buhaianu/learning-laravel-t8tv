@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('rumble_video', function (Blueprint $table) {
-            $table->id('rumble_video_id');
+            $table->id();
             $table->unsignedBigInteger('rumble_channel_id');
-            $table->unsignedBigInteger('video_category_id');
+            $table->unsignedBigInteger('video_category_id')->nullable();
             $table->text('html');
             $table->string('url', 255)->unique();
             $table->string('title', 255)->unique();
@@ -28,13 +28,13 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('rumble_channel_id')
-                ->references('rumble_channel_id')
+                ->references('id')
                 ->on('rumble_channel')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
                 
             $table->foreign('video_category_id')
-                ->references('video_category_id')
+                ->references('id')
                 ->on('video_category')
                 ->onUpdate('cascade');
         });

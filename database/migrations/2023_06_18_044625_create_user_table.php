@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('user', function (Blueprint $table) {
-            $table->id('user_id');
+            $table->id();
             $table->unsignedBigInteger('user_role_id')->default(0);
             $table->string('first_name', 50);
             $table->string('last_name', 50);
@@ -23,7 +23,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('user_role_id')
-                ->references('user_role_id')
+                ->references('id')
                 ->on('user_role')
                 ->onUpdate('cascade');
         });
