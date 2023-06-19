@@ -1,9 +1,81 @@
 <?php
 
+use \App\Models\RumbleChannel;
+use \App\Models\RumbleVideo;
+
+
 /* Template */
 if (!function_exists('name'))
 {
     // function here
+}
+
+if (!function_exists('getRumbleChannelIdInTable'))
+{
+    function getRumbleChannelIdInTable($rumbleChannelId)
+    {
+        $queryResult = DB::table('rumble_channel')
+                    ->where('rumble_id', $rumbleChannelId)
+                    ->get('id')
+                    ->first();
+
+        if (empty($queryResult)) return null;
+
+        return $queryResult->id;
+    }
+}
+
+if (!function_exists('createRumbleVideo'))
+{
+    function createRumbleVideo($data, $rumbleChannelIdInTable)
+    {
+        RumbleVideo::create([
+            'rumble_channel_id' => $rumbleChannelIdInTable,
+            'html' => $data->html,
+            'url' => $data->url,
+            'title' => $data->title,
+            'thumbnail' => $data->thumbnail,
+            'duration' => $data->duration,
+            'uploaded_at' => convertISO8601ToMysqlDateTime($data->uploaded_at->datetime),
+            'likes_count' => convertRumbleFollowersCountToInt($data->votes->up),
+            'dislikes_count' => convertRumbleFollowersCountToInt($data->votes->down),
+            'views_count' => convertRumbleFollowersCountToInt($data->counters->views),
+            'comments_count' => convertRumbleFollowersCountToInt($data->counters->comments),
+        ]);
+
+        return;
+    }
+}
+
+if (!function_exists('createRumbleChannel'))
+{
+    function createRumbleChannel($data)
+    {
+        RumbleChannel::create([
+            'rumble_id' => $data->id,
+            'url' => "https://rumble.com/c/$data->id",
+            'title' => $data->title,
+            'joining_date' => convertRumbleJoiningDateToMysqlDateFormat($data->joining_date),
+            'description' => $data->description,
+            'banner' => $data->banner,
+            'avatar' => $data->avatar,
+            'followers_count' => convertRumbleFollowersCountToInt($data->followers_count),
+            'videos_count' => convertRumbleVideosCountToInt($data->videos_count),
+        ]);
+
+        return;
+    }
+}
+
+if (!function_exists('convertISO8601ToMysqlDateTime'))
+{
+    function convertISO8601ToMysqlDateTime($dateInIso8601)
+    {
+        $dateTime = new DateTime($dateInIso8601);
+        $mysqlDateTime = $dateTime->format("Y-m-d H:i:s");
+        
+        return $mysqlDateTime;
+    }
 }
 
 if (!function_exists('convertRumbleVideosCountToInt'))

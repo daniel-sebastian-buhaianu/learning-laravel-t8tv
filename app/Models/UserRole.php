@@ -24,11 +24,4 @@ class UserRole extends Model
      * @var string
      */
     protected $table = 'user_role';
-
-    /**
-     * The primary key name in the model's table.
-     *
-     * @var string
-     */
-    protected $primaryKey = 'user_role_id';
 }

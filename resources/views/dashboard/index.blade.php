@@ -48,5 +48,30 @@
             </div>
         @endif
     </form>
+
+    <form class="mt-5" action="/rumble-video" method="post">
+        @csrf
+        <h4>Add Rumble Channel Videos Data To Database</h4>
+        @if (count($errors->addRumbleChannelVideos) > 0)
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->addRumbleChannelVideos->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+        @if (session()->has('addRumbleChannelVideosApiError'))
+            <div class="alert alert-danger">
+                {{ session()->get('addRumbleChannelVideosApiError') }}
+            </div>
+        @endif
+        <p>URL:<input type="text" name="url" placeholder="Rumble Channel URL"><input type="submit" value="Add"></p>
+        @if(session()->has('addRumbleChannelVideosStatus'))
+            <div class="alert alert-success">
+                {{ session()->get('addRumbleChannelVideosStatus') }}
+            </div>
+        @endif
+    </form>
 </div>
 @endsection

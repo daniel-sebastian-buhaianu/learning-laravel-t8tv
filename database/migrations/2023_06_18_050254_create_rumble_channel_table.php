@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('rumble_channel', function (Blueprint $table) {
-            $table->id('rumble_channel_id');
-            $table->string('id', 127)->unique();
+            $table->id();
+            $table->string('rumble_id', 127)->unique();
             $table->string('url', 255)->unique();
             $table->string('title', 127)->unique();
             $table->date('joining_date');
