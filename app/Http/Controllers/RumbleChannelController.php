@@ -47,36 +47,26 @@ class RumbleChannelController extends Controller
         }
 
         $url = $request->all()['url'];
-        $apiUrl = "https://dsb99.app/rumble/api/v1/channel?url=$url";
-        $response = json_decode(makeGetRequest($apiUrl));
 
-        if (empty($response->data->url) || empty($response->data->id))
+        $rumbleChannel= getRumbleChannelAboutData($url);
+
+        if (!empty($rumbleChannel['error']))
         {
             return redirect()
                 ->back()
-                ->with('addRumbleChannelApiError', $response->message);
+                ->with('addRumbleChannelApiError', $rumbleChannel['error']);
         }
 
-        $rumbleChannelId = $response->data->id;
-        $rumbleChannelUrl = $response->data->url;
-        
-        $apiUrl = 'https://dsb99.app/rumble/api/v1/channel/'.$rumbleChannelId.'/about';
-        $response = json_decode(makeGetRequest($apiUrl));
-        $data = $response->data;
+        $queryResult = addRumbleChannelToDatabase($rumbleChannel['data']);
 
-        RumbleChannel::create([
-            'rumble_id' => $rumbleChannelId,
-            'url' => $rumbleChannelUrl,
-            'title' => $data->title,
-            'joining_date' => convertRumbleJoiningDateToMysqlDateFormat($data->joining_date),
-            'description' => $data->description,
-            'banner' => $data->banner,
-            'avatar' => $data->avatar,
-            'followers_count' => convertRumbleFollowersCountToInt($data->followers_count),
-            'videos_count' => convertRumbleVideosCountToInt($data->videos_count),
-        ]);
+        if (false === $queryResult)
+        {
+            return redirect()
+                ->back()
+                ->with('addRumbleChannelApiError', 'Something went wrong.');
+        }
 
-        return redirect()->back()->with('addRumbleChannelStatus', "The rumble channel '$data->title' has been successfully added to the database.");
+        return redirect()->back()->with('addRumbleChannelStatus', "Success!");
     }
 
     /**

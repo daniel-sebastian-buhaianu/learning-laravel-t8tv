@@ -42,68 +42,30 @@ class RumbleVideoController extends Controller
         if ($validator->fails()) 
         {
             return redirect()
-                ->back()
-                ->withErrors($validator, 'addRumbleChannelVideos');
+                    ->back()
+                    ->withErrors($validator, 'addRumbleChannelVideos');
         }
 
         $url = $request->all()['url'];
-        $apiUrl = "https://dsb99.app/rumble/api/v1/channel?url=$url";
-        $response = json_decode(makeGetRequest($apiUrl));
+        $response = addRumbleVideosToDatabase($url);
 
-        if (empty($response->data->url) || empty($response->data->id))
+        if (!empty($response['error']))
         {
             return redirect()
-                ->back()
-                ->with('addRumbleChannelVideosApiError', $response->message);
-        }
-
-        $rumbleChannelId = $response->data->id;
-        $rumbleChannelUrl = $response->data->url;
-        
-        $apiUrl = 'https://dsb99.app/rumble/api/v1/channel/'.$rumbleChannelId.'/videos';
-        $response = json_decode(makeGetRequest($apiUrl));
-        $videos = $response->data->videos;
-
-        $rumbleChannelIdInTable = getRumbleChannelIdInTable($rumbleChannelId);
-
-        if (empty($rumbleChannelIdInTable))
-        {
-            return redirect()
-                ->back()
-                ->with('addRumbleChannelVideosApiError', 'Error: The videos belong to a rumble channel which is not in the database. Please add the rumble channel to the database first.');
-        }
-
-        foreach($videos as $video)
-        {
-            $dataToValidate = [
-                'title' => $video->title,
-                'url' => $video->url
-            ];
-
-            $validator = Validator::make($dataToValidate, [
-                'title' => [
-                    'string',
-                    'max:255',
-                    'unique:rumble_video'
-                ],
-                'url' => [
-                    'string',
-                    'max:255',
-                    'unique:rumble_video'
-                ]
-            ]);
-
-            if ($validator->fails()) 
-            {
-                return redirect()
                     ->back()
-                    ->withErrors($validator, 'addRumbleChannelVideos');
-            }
-
-            createRumbleVideo($video, $rumbleChannelIdInTable);
+                    ->with('addRumbleChannelVideosApiError', $response['error']);
         }
 
-        return redirect()->back()->with('addRumbleChannelVideosStatus', "Success!");
+        $countVideosAddedToDatabase = $response['countVideosAddedToDatabase'];
+
+        if (0 === $countVideosAddedToDatabase)
+        {
+            return redirect()
+                ->back()
+                ->with('addRumbleChannelVideosApiError', "Error: Could not find any new videos to add to database.");
+        }
+
+        return redirect()->back()->with('addRumbleChannelVideosStatus', "Added $countVideosAddedToDatabase new videos to database!");
     }
 
     /**
