@@ -63,6 +63,9 @@
                                     <a class="dropdown-item" href="{{ route('video-category.index') }}">
                                         {{ __('Video Categories') }}
                                     </a>
+                                    <a class="dropdown-item" href="{{ route('rumble-channel.index') }}">
+                                        {{ __('Rumble Channels') }}
+                                    </a>
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
