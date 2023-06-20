@@ -14,7 +14,9 @@ class RumbleVideoController extends Controller
      */
     public function index()
     {
-        //
+        $videos = DB::table('rumble_video')->paginate(25);
+
+        return view('rumble-video.index', compact('videos'));
     }
 
     /**
@@ -71,9 +73,18 @@ class RumbleVideoController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(RumbleVideo $rumbleVideo)
+    public function show($id)
     {
-        //
+        $video = DB::table('rumble_video')->find($id);
+
+        if (empty($video))
+        {
+            abort(404);
+        }
+
+        $videoTitle = $video->title;
+        
+        return view('rumble-video.show', compact('videoTitle'));
     }
 
     /**
