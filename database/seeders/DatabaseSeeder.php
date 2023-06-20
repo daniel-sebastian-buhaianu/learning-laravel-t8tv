@@ -49,5 +49,49 @@ class DatabaseSeeder extends Seeder
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ]);
+
+        DB::table('video_category')->insert([
+            'name' => 'Tate Confidential',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+        ]);
+
+        DB::table('video_category')->insert([
+            'name' => 'Tate Speech',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+        ]);
+
+        DB::table('video_category')->insert([
+            'name' => 'Tate Interviews',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+        ]);
+
+        DB::table('video_category')->insert([
+            'name' => 'Tate Motivation',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+        ]);
+
+        DB::table('video_category')->insert([
+            'name' => 'Tate Shorts',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+        ]);
+
+        DB::table('video_category')->insert([
+            'name' => 'Emergency Meetings',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+        ]);
+
+        addRumbleChannelToDatabase(
+            getRumbleChannelAboutData('https://rumble.com/c/tateconfidential')['data']
+        );
+
+        addRumbleChannelToDatabase(
+            getRumbleChannelAboutData('https://rumble.com/c/TateSpeech')['data']
+        );
     }
 }

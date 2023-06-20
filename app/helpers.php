@@ -2,12 +2,138 @@
 
 use \App\Models\RumbleChannel;
 use \App\Models\RumbleVideo;
+use \Illuminate\Database\QueryException;
 
 
 /* Template */
 if (!function_exists('name'))
 {
     // function here
+}
+
+if (!function_exists('addRumbleVideosToDatabase'))
+{
+    function addRumbleVideosToDatabase($url)
+    {
+        $countVideosAddedToDatabase = 0;
+
+        $response = getRumbleChannelVideosData($url);
+
+        if(!empty($response['error']))
+        {
+            return array(
+                'countVideosAddedToDatabase' => $countVideosAddedToDatabase,
+                'error' => $response['error']
+            );
+        }
+
+        $rumbleChannelIdInTable = $response['rumbleChannelIdInTable'];
+        $videos = $response['data'];
+
+        foreach($videos as $video)
+        {
+            $dataToValidate = [
+                'title' => $video->title,
+                'url' => $video->url
+            ];
+
+            $validator = Validator::make($dataToValidate, [
+                'title' => [
+                    'string',
+                    'max:255',
+                    'unique:rumble_video'
+                ],
+                'url' => [
+                    'string',
+                    'max:255',
+                    'unique:rumble_video'
+                ]
+            ]);
+
+            if (!$validator->fails()) 
+            {
+                $queryResult = addRumbleVideoToDatabase($video, $rumbleChannelIdInTable);
+
+                if (true === $queryResult['success'])
+                {
+                    $countVideosAddedToDatabase++;
+                }
+            }
+        }
+
+        return array(
+            'countVideosAddedToDatabase' => $countVideosAddedToDatabase,
+            'error' => null
+        );
+    }
+}
+
+if (!function_exists('getRumbleChannelVideosData'))
+{
+    function getRumbleChannelVideosData($url)
+    {
+        $apiUrl = "https://dsb99.app/rumble/api/v1/channel?url=$url";
+        $response = json_decode(makeGetRequest($apiUrl));
+
+        if (empty($response->data->url) || empty($response->data->id))
+        {
+            return array(
+                'data' => null,
+                'error' => $response->message
+            );
+        }
+
+        $queryString = parse_url($url, PHP_URL_QUERY);
+        $queryString = $queryString ? "?$queryString" : '';
+
+        $rumbleChannelId = $response->data->id;
+        $apiUrl = 'https://dsb99.app/rumble/api/v1/channel/'.$rumbleChannelId.'/videos'.$queryString;
+        $response = json_decode(makeGetRequest($apiUrl));
+
+        $rumbleChannelIdInTable = getRumbleChannelIdInTable($rumbleChannelId);
+
+        if (empty($rumbleChannelIdInTable))
+        {
+            return array(
+                'data' => $response,
+                'error' => 'Error: The videos belong to a rumble channel which is not in the database. Please add the rumble channel to the database first.'
+            );
+        }
+
+        return array(
+            'data' => $response->data->videos,
+            'rumbleChannelIdInTable' => $rumbleChannelIdInTable,
+            'error' => null
+        );
+    }
+}
+
+if (!function_exists('getRumbleChannelAboutData'))
+{
+    function getRumbleChannelAboutData($url)
+    {
+        $apiUrl = "https://dsb99.app/rumble/api/v1/channel?url=$url";
+        $response = json_decode(makeGetRequest($apiUrl));
+
+        if (empty($response->data->url) || empty($response->data->id))
+        {
+            return array(
+                'data' => null,
+                'error' => $response->message
+            );
+        }
+
+        $rumbleChannelId = $response->data->id;
+        $apiUrl = 'https://dsb99.app/rumble/api/v1/channel/'.$rumbleChannelId.'/about';
+        $response = json_decode(makeGetRequest($apiUrl));
+        $data = $response->data;
+        $data->id = $rumbleChannelId;
+
+        return array(
+            'data' => $data,
+            'error' => null
+        );
+    }
 }
 
 if (!function_exists('getRumbleChannelIdInTable'))
@@ -25,45 +151,76 @@ if (!function_exists('getRumbleChannelIdInTable'))
     }
 }
 
-if (!function_exists('createRumbleVideo'))
+if (!function_exists('addRumbleVideoToDatabase'))
 {
-    function createRumbleVideo($data, $rumbleChannelIdInTable)
+    function addRumbleVideoToDatabase($data, $rumbleChannelIdInTable)
     {
-        RumbleVideo::create([
-            'rumble_channel_id' => $rumbleChannelIdInTable,
-            'html' => $data->html,
-            'url' => $data->url,
-            'title' => $data->title,
-            'thumbnail' => $data->thumbnail,
-            'duration' => $data->duration,
-            'uploaded_at' => convertISO8601ToMysqlDateTime($data->uploaded_at->datetime),
-            'likes_count' => convertRumbleFollowersCountToInt($data->votes->up),
-            'dislikes_count' => convertRumbleFollowersCountToInt($data->votes->down),
-            'views_count' => convertRumbleFollowersCountToInt($data->counters->views),
-            'comments_count' => convertRumbleFollowersCountToInt($data->counters->comments),
-        ]);
+        try 
+        {
 
-        return;
+            RumbleVideo::create([
+                'rumble_channel_id' => $rumbleChannelIdInTable,
+                'html' => $data->html,
+                'url' => $data->url,
+                'title' => $data->title,
+                'thumbnail' => $data->thumbnail,
+                'duration' => $data->duration,
+                'uploaded_at' => convertISO8601ToMysqlDateTime($data->uploaded_at->datetime),
+                'likes_count' => convertRumbleFollowersCountToInt($data->votes->up),
+                'dislikes_count' => convertRumbleFollowersCountToInt($data->votes->down),
+                'views_count' => convertRumbleFollowersCountToInt($data->counters->views),
+                'comments_count' => convertRumbleFollowersCountToInt($data->counters->comments),
+            ]);
+        }
+        catch (QueryException $exception)
+        {
+            $errorInfo = $exception->errorInfo;
+
+            return array(
+                'success' => false,
+                'error' => $errorInfo
+            );
+        }
+        
+        return array(
+            'success' => true,
+            'error' => null
+        );
     }
 }
 
-if (!function_exists('createRumbleChannel'))
+if (!function_exists('addRumbleChannelToDatabase'))
 {
-    function createRumbleChannel($data)
+    function addRumbleChannelToDatabase($data)
     {
-        RumbleChannel::create([
-            'rumble_id' => $data->id,
-            'url' => "https://rumble.com/c/$data->id",
-            'title' => $data->title,
-            'joining_date' => convertRumbleJoiningDateToMysqlDateFormat($data->joining_date),
-            'description' => $data->description,
-            'banner' => $data->banner,
-            'avatar' => $data->avatar,
-            'followers_count' => convertRumbleFollowersCountToInt($data->followers_count),
-            'videos_count' => convertRumbleVideosCountToInt($data->videos_count),
-        ]);
+        try
+        {
+            RumbleChannel::create([
+                'rumble_id' => $data->id,
+                'url' => "https://rumble.com/c/$data->id",
+                'title' => $data->title,
+                'joining_date' => convertRumbleJoiningDateToMysqlDateFormat($data->joining_date),
+                'description' => $data->description,
+                'banner' => $data->banner,
+                'avatar' => $data->avatar,
+                'followers_count' => convertRumbleFollowersCountToInt($data->followers_count),
+                'videos_count' => convertRumbleVideosCountToInt($data->videos_count),
+            ]);
+        }
+        catch (QueryException $exception)
+        {
+            $errorInfo = $exception->errorInfo;
 
-        return;
+            return array(
+                'success' => false,
+                'error' => $errorInfo
+            );
+        }
+
+        return array(
+            'success' => true,
+            'error' => null
+        );
     }
 }
 
