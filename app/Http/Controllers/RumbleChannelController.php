@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\RumbleChannel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class RumbleChannelController extends Controller
 {
@@ -13,7 +14,9 @@ class RumbleChannelController extends Controller
      */
     public function index()
     {
-        //
+        $channels = DB::table('rumble_channel')->get();
+
+        return view('rumble-channel.index', compact('channels'));
     }
 
     /**
@@ -72,9 +75,27 @@ class RumbleChannelController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(RumbleChannel $rumbleChannel)
+    public function show($rumbleChannelId)
     {
-        //
+        if (DB::table('rumble_channel')->where('rumble_id', $rumbleChannelId)->doesntExist())
+        {
+            abort(404);
+        }
+
+        try
+        {
+            $channelTitle = DB::table('rumble_channel')
+                            ->where('rumble_id', $rumbleChannelId)
+                            ->get('title')
+                            ->first()
+                            ->title;
+        }
+        catch (\Exception $e)
+        {
+            $channelTitle = 'No Title';
+        }
+        
+        return view('rumble-channel.show', compact('channelTitle'));
     }
 
     /**

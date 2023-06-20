@@ -19,12 +19,17 @@ Route::get('/', function () {
 
 Auth::routes();
 
+/* =================== /home =================== */
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])
     ->name('home');
 
+
+/* =================== /dashboard =================== */
 Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])
     ->name('dashboard');
 
+
+/* =================== /video-category =================== */
 Route::post('/video-category', [App\Http\Controllers\VideoCategoryController::class, 'store'])
     ->name('video-category.store');
 
@@ -33,6 +38,14 @@ Route::get('/video-category', [App\Http\Controllers\VideoCategoryController::cla
 
 Route::get('/video-category/{videoCategoryNameInSlugFormat}', [App\Http\Controllers\VideoCategoryController::class, 'show'])
     ->name('video-category.show');
+
+
+/* =================== /rumble-channel =================== */
+Route::get('/rumble-channel', [App\Http\Controllers\RumbleChannelController::class, 'index'])
+    ->name('rumble-channel.index');
+
+Route::get('/rumble-channel/{rumbleChannelId}', [App\Http\Controllers\RumbleChannelController::class, 'show'])
+    ->name('rumble-channel.show');
 
 Route::post('/rumble-channel', [App\Http\Controllers\RumbleChannelController::class, 'store'])
     ->name('rumble-channel.store');
